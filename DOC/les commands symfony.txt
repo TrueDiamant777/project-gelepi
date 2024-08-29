@@ -1,0 +1,8 @@
+symfony new gelepi --webapp
+
+php bin/console make:controller GelepiBase
+
+a tester dans le env si besoin, tot ou tard
+DATABASE_URL=mysql://postgres:12345678@127.0.0.1:3306/db_gelepi
+
+

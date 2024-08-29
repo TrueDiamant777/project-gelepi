@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}
+        {% endblock %}
+
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
+        
+<style>
+h1 {
+    position:relative;
+    padding-left:5vmin;
+    margin-left:8vmin;
+    font-size: 3.5vmin;
+}
+a {
+    padding:2vmin;
+    font-size: 3vmin;
+}
+</style>
+
+    </head>
+    <body>
+        {% block body %}
+        <h1>Accueil</h1>
+        <nav>
+ <a href="{{ path('app_gelepi_listing') }}" class="btn btn-primary">Liste Complete</a>
+ <a href="{{ path('app_gelepi_listing') }}" class="btn btn-primary">Ajouter Variable</a>
+ <a href="{{ path('app_gelepi_element') }}" class="btn btn-primary">Ajouter Materiel</a>
+ </nav>
+ {% endblock %}
+    </body>
+</html>
