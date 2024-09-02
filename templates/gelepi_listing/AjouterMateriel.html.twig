@@ -1,22 +1,59 @@
 <style>
-table, tr, td {
-    border:solid 1px black;
-    border-collapse: collapse
-}
-th {
-    border : 3px;
-}
-.interface{
-    width:69vw;
-    margin-left:15vw;
-    margin-right:15vw;
-    padding:3vmin;
-    background-color:rgba(0,0,0,0);
-    border:solid 1px black;
-    border-radius:3vmin
-}
+	table,
+	tr,
+	td {
+		border: solid 1px black;
+		border-collapse: collapse
+	}
+	th {
+		border: 3px;
+	}
+	.interface {
+		width: 69vw;
+		margin-left: 15vw;
+		margin-right: 15vw;
+		padding: 3vmin;
+		background-color: rgba(0, 0, 0, 0);
+		border: solid 1px black;
+		border-radius: 3vmin
+	}
 </style>
-<div class="interface ">
-{{ form_start(form) }}
-{{ form_end(form) }}
+<div
+	class="interface">
+	{# templates/gelepi_listing/AjouterMateriel.html.twig #}
+
+	{{ form_start(form) }}
+
+	{# Other form fields #}
+
+	<div class="form-group">
+		<label for="material_type">Material Type:</label>
+		<select name="material_type" id="material_type" class="form-control">
+			{% for type in materialTypes %}
+				<option value="{{ type.id }}">{{ type.name }}</option>
+			{% endfor %}
+		</select>
+	</div>
+
+	<div class="form-group">
+		<label for="warranty_state">Etat de Garanti:</label>
+		<select name="warranty_state" id="warranty_state" class="form-control">
+			{% for state in warrantyStates %}
+				<option value="{{ state.id }}">{{ state.state }}</option>
+			{% endfor %}
+		</select>
+	</div>
+
+	<div class="form-group">
+		<label for="health_state">Etat de l'appareil:</label>
+		<select name="health_state" id="health_state" class="form-control">
+			{% for state in healthStates %}
+				<option value="{{ state.id }}">{{ state.state }}</option>
+			{% endfor %}
+		</select>
+	</div>
+
+	{{ form_end(form) }}
+
+
 </div>

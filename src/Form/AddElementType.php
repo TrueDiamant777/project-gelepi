@@ -27,11 +27,6 @@ class AddElementType extends AbstractType
         $etatSanteChoices = $this->csvManager->getEtatSanteChoices();
 
         $builder
-            ->add('Type', ChoiceType::class, [
-                'label' => 'Nom Materiel',
-                'choices' => $typeChoices,
-                'required' => true,
-            ])
             ->add('Arriver', DateType::class, [
                 'label' => 'Date d\'arriver',
                 'required' => true,
@@ -41,21 +36,8 @@ class AddElementType extends AbstractType
                 'required' => true,
             ])
             ->add('DureeGaranti', TextType::class, [
-                'label' => 'Durée Max. de la garanti',
+                'label' => 'Durée Max. de la garanti (année)',
                 'required' => true,
-            ])
-            ->add('EtatGaranti', ChoiceType::class, [
-                'label' => 'Etat de Garanti',
-                'choices' => $etatGarantiChoices,
-                'required' => true,
-            ])
-            ->add('Prioriter', ChoiceType::class, [
-                'label' => 'Priorité',
-                'choices' => [
-                    'Basse' => 'basse',
-                    'Moyenne' => 'moyenne',
-                    'Haute' => 'haute',
-                ],
             ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Ajouté',
@@ -65,7 +47,6 @@ class AddElementType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            // Configure your form options here
         ]);
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Service\CsvDataExplorer;
 
 class CsvManager
@@ -19,6 +18,15 @@ class CsvManager
         if (($handle = fopen($metaListPath, 'r')) !== false) {
             fgetcsv($handle, 1000, ';'); // Lire et ignorer l'en-tête
             while (($data = fgetcsv($handle, 1000, ';')) !== false) {
+                if (empty(array_filter($data))) {
+                    continue; // Skip empty rows
+                }
+
+                // Handle missing data in the row
+                $data = array_map(function($value) {
+                    return $value === '' ? 'unknown' : $value;
+                }, $data);
+
                 $this->metaData[$data[0]] = $data[3]; // $data[0] = Id, $data[3] = Nom
             }
             fclose($handle);
@@ -36,6 +44,15 @@ class CsvManager
         if (($handle = fopen($etatGarantiPath, 'r')) !== false) {
             fgetcsv($handle, 1000, ';'); // Lire et ignorer l'en-tête
             while (($data = fgetcsv($handle, 1000, ';')) !== false) {
+                if (empty(array_filter($data))) {
+                    continue; // Skip empty rows
+                }
+
+                // Handle missing data in the row
+                $data = array_map(function($value) {
+                    return $value === '' ? 'unknown' : $value;
+                }, $data);
+
                 $this->etatGarantiData[$data[0]] = $data[1]; // $data[0] = Code, $data[1] = Description
             }
             fclose($handle);
@@ -53,6 +70,15 @@ class CsvManager
         if (($handle = fopen($etatSantePath, 'r')) !== false) {
             fgetcsv($handle, 1000, ';'); // Lire et ignorer l'en-tête
             while (($data = fgetcsv($handle, 1000, ';')) !== false) {
+                if (empty(array_filter($data))) {
+                    continue; // Skip empty rows
+                }
+
+                // Handle missing data in the row
+                $data = array_map(function($value) {
+                    return $value === '' ? 'unknown' : $value;
+                }, $data);
+
                 $this->etatSanteData[$data[0]] = $data[1]; // $data[0] = Code, $data[1] = Description
             }
             fclose($handle);
@@ -71,8 +97,18 @@ class CsvManager
             $this->header = fgetcsv($handleList, 1000, ';'); // Lire et stocker l'en-tête
 
             while (($data = fgetcsv($handleList, 1000, ';')) !== false) {
-                if ($data[0] == '0') {
-                    continue;
+                if (empty(array_filter($data))) {
+                    continue; // Skip empty rows
+                }
+
+                // Handle missing data in the row
+                $data = array_map(function($value) {
+                    return $value === '' ? 'unknown' : $value;
+                }, $data);
+
+                // Ensure all rows have at least the expected number of columns
+                while (count($data) < count($this->header)) {
+                    $data[] = 'unknown';
                 }
 
                 // Remplacement des ID avec les noms de matériels
@@ -100,7 +136,7 @@ class CsvManager
 
     public function getFileData(): array
     {
-        return [$this->header] + $this->fileData; // Ajouter l'en-tête aux données du fichier
+        return array_merge([$this->header], $this->fileData); // Ajouter l'en-tête aux données du fichier
     }
 
     public function setFileData(array $fileData): void
