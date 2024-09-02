@@ -121,35 +121,55 @@ public function ajouter_materiel(Request $request, CsvManager $csvManager, CsvFi
         fclose($handle);
     }
 
-    // Check if the form is submitted and valid
-    if ($form->isSubmitted() && $form->isValid()) {
-        // Get the form data
-        $data = $form->getData();
+if ($form->isSubmitted() && $form->isValid()) {
+    $newId = null;
 
-        // For debugging, you might want to log or dump the data
-        // dump($data); // Uncomment this if you want to see the form data in the Symfony profiler
-        // die(); // Stop execution to check the data
-
-        // Here you would validate the data further if necessary
-        // Save or process the data
-        $newEntry = [
-            $data['Arriver'], 
-            $data['DepartGaranti'], 
-            $data['DureeGaranti'],
-            // Add other fields as needed
-        ];
-
-        // Append to the CSV file or process the data as needed
-        if (($handle = fopen($listPath, "a")) !== FALSE) {
-            fputcsv($handle, $newEntry, ";");
-            fclose($handle);
+    if (file_exists($listPath)) {
+        if (($handle = fopen($listPath, 'r')) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ';')) !== FALSE) {
+                if (empty(array_filter($data))) {
+                    continue;
+                }
+            $newId = $data[6];
+            }
+        fclose($handle);
         }
-
-        // Redirect or return a response
-        return $this->redirectToRoute('app_gelepi_element'); // Redirect back to the form page or another page
     }
 
-    // Render the form view
+    $data = $form->getData();
+    
+    $nextId = $newId + 1 ?? '0'; 
+    $materialTypeId = $data['material_type'] ?? '0'; 
+
+    $arriverTimestamp = $data['Arriver'] instanceof \DateTime ? $data['Arriver']->format('Y-m-d') : 'unknown';
+    $garrantiTimeStamp = $data['DepartGaranti'] instanceof \DateTime ? $data['DepartGaranti']->format('Y-m-d') : 'unknown';
+    $garrantiYearsRemaining = $data['DureeGaranti'] ?? '0'; 
+
+    $warrantyStateId = $data['warrantyStates'] ?? 'unknown'; 
+    $healthStateId = $data['healthStates'] ?? 'unknown'; 
+    
+    $additionalField = $data['AdditionalField'] ?? 'unknown'; 
+
+    // Prepare the new entry
+    $newEntry = [
+        $materialTypeId,
+        $arriverTimestamp,
+        $garrantiTimeStamp,
+        $garrantiYearsRemaining,
+        $warrantyStateId,
+        $healthStateId,
+        $nextId
+    ];
+
+    if (($handle = fopen($listPath, "a")) !== FALSE) {
+        fputcsv($handle, $newEntry, ";");
+        fclose($handle);
+    }
+
+    return $this->redirectToRoute('app_gelepi_element');
+}
+
+
     return $this->render('gelepi_listing/AjouterMateriel.html.twig', [
         'form' => $form->createView(),
         'materialTypes' => $materialTypes,
@@ -157,8 +177,5 @@ public function ajouter_materiel(Request $request, CsvManager $csvManager, CsvFi
         'healthStates' => $healthStates,
     ]);
 }
-
-
-//function i would move in another place later
 
 }

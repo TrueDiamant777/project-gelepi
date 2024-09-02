@@ -1,40 +1,43 @@
 {# templates/gelepi_base/index.html.twig #}
 
 <style>
-table {
-    width: 99vw;
-    position: fixed;
-}
-tr {
-    height: 3vh;
-}
-tr:hover {
-      font-weight: bold;
-      background-color:#ffffff;
-}
-tr:hover > * {
-      font-weight: bold;
-      background-color:#ffffff;
-}
+	table {
+		width: 99vw;
+		position: fixed;
+		overflow-y: scroll;
+	}
+	tr {
+		height: 3vh;
+	}
+	tr:hover {
+		font-weight: bold;
+		background-color: #ffffff;
+	}
+	tr:hover > * {
+		font-weight: bold;
+		background-color: #ffffff;
+	}
 
-table, tr, td {
-    border:solid 1px black;
-    border-collapse: collapse
-}
-th {
-    border : 3px;
-}
-td{
-    width: 14.14vw;
-}
+	table,
+	tr,
+	td {
+		border: solid 1px black;
+		border-collapse: collapse
+	}
+	th {
+		border: 3px;
+	}
+	td {
+		width: 14.14vw;
+	}
 </style>
 
 <table>
-    {% for row in csvData %}
-        <tr {% if loop.index is odd %}style="background-color: #cccccc;"{% else %}style="background-color: #aaaaaa;"{% endif %}>
-            {% for column in row %}
-                <td>{{ column }}</td>
-            {% endfor %}
-        </tr>
-    {% endfor %}
+	{% for row in csvData %}
+		<tr {% if loop.index is odd %} style="background-color: #cccccc;" {% else %} style="background-color: #aaaaaa;" {% endif %}>
+			{% for column in row %}
+				<td>{{ column }}</td>
+			{% endfor %}
+		</tr>
+	{% endfor %}
 </table>
