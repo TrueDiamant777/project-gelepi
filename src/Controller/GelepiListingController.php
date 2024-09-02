@@ -9,6 +9,7 @@ use App\Service\CsvDataExplorer\CsvManager;
 use App\Service\CsvDataExplorer\CsvFilter;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\AddElementType;
+use App\Form\AddElementMeta;
 
 class GelepiListingController extends AbstractController
 {
@@ -44,7 +45,6 @@ public function base(CsvManager $csvManager, CsvFilter $csvFilter): Response
     $processedData = [];
 
     foreach ($data as $row) {
-        // Skip rows where the first column is '0'
         if ($row[0] == '0') {
             continue;
         }
@@ -189,7 +189,7 @@ if ($form->isSubmitted() && $form->isValid()) {
         // Calculate the next ID
         $nextId = $this->getNextId($filePath);
 
-        $form = $this->createForm(AddElementType::class);
+        $form = $this->createForm(AddElementMeta::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

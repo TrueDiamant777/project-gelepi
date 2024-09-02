@@ -1,13 +1,5 @@
 <style>
-	table,
-	tr,
-	td {
-		border: solid 1px black;
-		border-collapse: collapse
-	}
-	th {
-		border: 3px;
-	}
+
 	.interface {
 		width: 69vw;
 		margin-left: 15vw;
@@ -17,8 +9,28 @@
 		border: solid 1px black;
 		border-radius: 3vmin
 	}
+	td {
+		width: 33vw;
+	}
 </style>
 <div class="interface">
 	{{ form_start(form) }}
+
+	<table>
+		<tr>
+			<td>{{ form_label(form.category) }}</td>
+			<td>{{ form_label(form.section) }}</td>
+			<td>{{ form_label(form.name) }}</td>
+		</tr>
+		<tr>
+			<td>{{ form_widget(form.category) }}</td>
+			<td>{{ form_widget(form.section) }}</td>
+			<td>{{ form_widget(form.name) }}</td>
+		</tr>
+		<tr>
+			<td colspan="3" style="text-align: center;"></td>
+		</tr>
+	</table>
+
 	{{ form_end(form) }}
 </div>

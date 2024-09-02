@@ -1,12 +1,22 @@
 <style>
-	table,
-	tr,
-	td {
-		border: solid 1px black;
-		border-collapse: collapse
+	.form-table {
+		width: 100%;
+		border-collapse: collapse;
+		margin: 20px 0;
 	}
-	th {
-		border: 3px;
+	.form-table td {
+		padding: 10px;
+		vertical-align: middle;
+	}
+	.form-table td input,
+	.form-table td select,
+	.form-table td button {
+		width: 100%;
+		padding: 8px;
+		box-sizing: border-box;
+	}
+	.form-table .submit-button {
+		text-align: center;
 	}
 	.interface {
 		width: 69vw;
@@ -18,14 +28,32 @@
 		border-radius: 3vmin
 	}
 </style>
-<div
-	class="interface">
-	{# templates/gelepi_listing/AjouterMateriel.html.twig #}
 
+<div class="interface">
 	{{ form_start(form) }}
 
+	<table class="form-table">
+		<tr>
+			<td>{{ form_label(form.material_type) }}</td>
+			<td>{{ form_label(form.health_state) }}</td>
+			<td>{{ form_label(form.warranty_state) }}</td>
+		</tr>
+		<tr>
+			<td>{{ form_widget(form.material_type) }}</td>
+			<td>{{ form_widget(form.health_state) }}</td>
+			<td>{{ form_widget(form.warranty_state) }}</td>
+		</tr>
+		<tr>
+			<td>{{ form_label(form.Arriver) }}</td>
+			<td>{{ form_label(form.DepartGaranti) }}</td>
+			<td>{{ form_label(form.DureeGaranti) }}</td>
+		</tr>
+		<tr>
+			<td>{{ form_widget(form.Arriver) }}</td>
+			<td>{{ form_widget(form.DepartGaranti) }}</td>
+			<td>{{ form_widget(form.DureeGaranti) }}</td>
+		</tr>
+	</table>
 
 	{{ form_end(form) }}
-
-
 </div>

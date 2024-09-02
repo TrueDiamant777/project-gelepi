@@ -30,12 +30,14 @@
 	</head>
 	<body>
 		{% block body %}
-			<h1>Accueil</h1>
+			<hr>
 			<nav>
 				<a href="{{ path('app_gelepi_listing') }}" class="btn btn-primary">Liste Complete</a>
 				<a href="{{ path('app_gelepi_variable') }}" class="btn btn-primary">Ajouter Variable</a>
 				<a href="{{ path('app_gelepi_element') }}" class="btn btn-primary">Ajouter Materiel</a>
 			</nav>
+			<hr>
+
 		{% endblock %}
 	</body>
 </html>
