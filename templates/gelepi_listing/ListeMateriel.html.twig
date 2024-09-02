@@ -11,11 +11,12 @@
 	}
 	tr:hover {
 		font-weight: bold;
-		background-color: #ffffff;
+		background-color: #ffffff !important;
 	}
 	tr:hover > * {
 		font-weight: bold;
-		background-color: #ffffff;
+		background-color: #ffffff !important;
+		color: black !important;
 	}
 
 	table,
@@ -34,7 +35,7 @@
 
 <table>
 	{% for row in csvData %}
-		<tr {% if loop.index is odd %} style="background-color: #cccccc;" {% else %} style="background-color: #aaaaaa;" {% endif %}>
+		<tr {% if loop.index is odd %} style="background-color: #cccccc !important;" {% else %} style="background-color: #aaaaaa !important;" {% endif %}>
 			{% for column in row %}
 				<td>{{ column }}</td>
 			{% endfor %}
