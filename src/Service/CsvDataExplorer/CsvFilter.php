@@ -20,7 +20,7 @@ class CsvFilter
                 $row[5] = 'Toujours*';
             }
              if ($row[5] == 'Foutu') {
-                $row[3] = 'Chaise Honte';
+                $row[3] = 'Chaise que tout le monde evite';
             }
         }
 

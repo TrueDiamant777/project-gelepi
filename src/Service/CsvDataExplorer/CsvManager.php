@@ -6,8 +6,8 @@ class CsvManager
     private $metaData = [];
     private $fileData = [];
     private $header = [];
-    private $etatGarantiData = []; // Nouvelle propriété pour les états de garantie
-    private $etatSanteData = [];   // Nouvelle propriété pour les états de santé
+    private $etatGarantiData = []; 
+    private $etatSanteData = []; 
 
     public function loadMetaData(string $metaListPath): bool
     {
@@ -169,5 +169,10 @@ class CsvManager
             $choices[$row[1]] = $row[0];
         }
         return $choices;
+    }
+    
+    public function getMetaData(): array
+    {
+        return $this->metaData;
     }
 }

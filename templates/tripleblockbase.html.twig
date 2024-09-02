@@ -11,25 +11,25 @@
 		</title>
 		{% block stylesheets %}{% endblock %}
 	</head>
-	<body>
-		{% block navbar %}
-			{% include 'nav.html.twig' %}
+	<body style="background-image: url('{{ asset('backgroundfake.png') }}');"></body>
+
+
+	{% block navbar %}
+		{% include 'nav.html.twig' %}
+	{% endblock %}
+
+	<div class="container">
+		{% block body %}
+			{% if body_template is defined %}
+				{% include body_template %}
+			{% else %}
+				{# Default content or a message indicating that no content is available #}
+				<p></p>
+			{% endif %}
 		{% endblock %}
+	</div>
 
-		<div class="container">
-			{% block body %}
-				{% if body_template is defined %}
-					{% include body_template %}
-				{% else %}
-					{# Default content or a message indicating that no content is available #}
-					<p></p>
-				{% endif %}
-			{% endblock %}
-		</div>
-
-		{% if block('footer') is defined %}
-			<footer></footer>
-		{% endif %}
-
-	</body>
-</html>
+	{% if block('footer') is defined %}
+		<footer></footer>
+	{% endif %}
+</html></body></html>

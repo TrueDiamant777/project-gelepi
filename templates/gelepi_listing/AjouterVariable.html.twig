@@ -6,11 +6,19 @@
 		margin-right: 15vw;
 		padding: 3vmin;
 		background-color: rgba(0, 0, 0, 0);
-		border: solid 1px black;
+		border: solid 1px white;
 		border-radius: 3vmin
 	}
 	td {
 		width: 33vw;
+		font-size: 4.5vmin;
+	}
+	input {
+		font-size: 3vmin;
+	}
+	button {
+		margin-top: 2vmin;
+		font-size: 2.8vmin;
 	}
 </style>
 <div class="interface">
@@ -18,9 +26,9 @@
 
 	<table>
 		<tr>
-			<td>{{ form_label(form.category) }}</td>
-			<td>{{ form_label(form.section) }}</td>
-			<td>{{ form_label(form.name) }}</td>
+			<td>Categorie/Designation</td>
+			<td>Section/Designation</td>
+			<td>Nom Modele</td>
 		</tr>
 		<tr>
 			<td>{{ form_widget(form.category) }}</td>

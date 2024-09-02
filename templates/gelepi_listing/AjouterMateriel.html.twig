@@ -24,8 +24,17 @@
 		margin-right: 15vw;
 		padding: 3vmin;
 		background-color: rgba(0, 0, 0, 0);
-		border: solid 1px black;
-		border-radius: 3vmin
+		border: solid 1px white;
+		border-radius: 3vmin;
+		font-size: 3vmin;
+	}
+	input,
+	select {
+		font-size: 3vmin;
+	}
+	button {
+		margin-top: 2vmin;
+		font-size: 2.8vmin;
 	}
 </style>
 
@@ -34,9 +43,9 @@
 
 	<table class="form-table">
 		<tr>
-			<td>{{ form_label(form.material_type) }}</td>
-			<td>{{ form_label(form.health_state) }}</td>
-			<td>{{ form_label(form.warranty_state) }}</td>
+			<td>Identification Materiel</td>
+			<td>Santé</td>
+			<td>Garranti</td>
 		</tr>
 		<tr>
 			<td>{{ form_widget(form.material_type) }}</td>
