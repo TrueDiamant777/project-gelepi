@@ -66,11 +66,10 @@ public function base(CsvManager $csvManager, CsvFilter $csvFilter): Response
 
         $processedData[] = $processedRow;
     }
-
-    return $this->render('gelepi_listing/ListeMateriel.html.twig', [
-        'controller_name' => 'GelepiListingController',
-        'csvData' => $processedData,
-    ]);
+       return $this->render('tripleblockbase.html.twig', [
+            'body_template' => 'gelepi_listing/ListeMateriel.html.twig',
+            'csvData' => $csvManager->getFileData(),
+        ]);
 }
 
 
@@ -88,8 +87,11 @@ public function ajouter_materiel(Request $request, CsvManager $csvManager, CsvFi
     $etatGarantiPath = $this->getParameter('kernel.project_dir') . '/public/GLPISYS/MetaDataGaranti.csv';
     $etatSantePath = $this->getParameter('kernel.project_dir') . '/public/GLPISYS/MetaDataSante.csv';
 
-    // Load material types for the dropdown
+    // Load material types
     $materialTypes = [];
+    $warrantyStates = [];
+    $healthStates = [];
+
     if (($handle = fopen($metaListPath, "r")) !== FALSE) {
         while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
             if (count($data) >= 2) {
@@ -98,9 +100,7 @@ public function ajouter_materiel(Request $request, CsvManager $csvManager, CsvFi
         }
         fclose($handle);
     }
-
-    // Load warranty states (MetaDataGaranti)
-    $warrantyStates = [];
+    // MetaDataGaranti
     if (($handle = fopen($etatGarantiPath, "r")) !== FALSE) {
         while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
             if (count($data) >= 2) {
@@ -109,9 +109,7 @@ public function ajouter_materiel(Request $request, CsvManager $csvManager, CsvFi
         }
         fclose($handle);
     }
-
-    // Load health states (MetaDataSante)
-    $healthStates = [];
+    // MetaDataSante
     if (($handle = fopen($etatSantePath, "r")) !== FALSE) {
         while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
             if (count($data) >= 2) {
@@ -145,12 +143,11 @@ if ($form->isSubmitted() && $form->isValid()) {
     $garrantiTimeStamp = $data['DepartGaranti'] instanceof \DateTime ? $data['DepartGaranti']->format('Y-m-d') : 'unknown';
     $garrantiYearsRemaining = $data['DureeGaranti'] ?? '0'; 
 
-    $warrantyStateId = $data['warrantyStates'] ?? 'unknown'; 
-    $healthStateId = $data['healthStates'] ?? 'unknown'; 
+    $warrantyStateId = $data['warranty_state'] ?? 'unknown'; 
+    $healthStateId = $data['health_state'] ?? 'unknown'; 
     
     $additionalField = $data['AdditionalField'] ?? 'unknown'; 
 
-    // Prepare the new entry
     $newEntry = [
         $materialTypeId,
         $arriverTimestamp,
@@ -170,12 +167,75 @@ if ($form->isSubmitted() && $form->isValid()) {
 }
 
 
-    return $this->render('gelepi_listing/AjouterMateriel.html.twig', [
-        'form' => $form->createView(),
-        'materialTypes' => $materialTypes,
-        'warrantyStates' => $warrantyStates,
-        'healthStates' => $healthStates,
-    ]);
+
+    
+       return $this->render('tripleblockbase.html.twig', [
+            'body_template' => 'gelepi_listing/AjouterMateriel.html.twig',
+            'csvData' => $csvManager->getFileData(),
+            'form' => $form->createView(),
+            'materialTypes' => $materialTypes,
+            'warrantyStates' => $warrantyStates,
+            'healthStates' => $healthStates,
+        ]);
 }
 
+
+
+    #[Route('/ajouter_variable', name: 'app_gelepi_variable')]
+    public function addMaterialType(Request $request): Response
+   {
+        $filePath = $this->getParameter('kernel.project_dir') . '/public/GLPISYS/MaterielType.csv';
+
+        // Calculate the next ID
+        $nextId = $this->getNextId($filePath);
+
+        $form = $this->createForm(AddElementType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            // Prepare the new uplet (row) for the CSV
+            $newEntry = [
+                $nextId,                // Use the calculated next ID
+                $data['category'],
+                $data['section'],
+                $data['name'],
+            ];
+
+            // Append the new entry to the CSV file
+            if (($handle = fopen($filePath, 'a')) !== false) {
+                fputcsv($handle, $newEntry, ';');
+                fclose($handle);
+            }
+
+            // Redirect or return a response
+            return $this->redirectToRoute('app_gelepi_variable'); // Redirect to the same form or another page
+        }
+
+        
+    
+       return $this->render('tripleblockbase.html.twig', [
+            'body_template' => 'gelepi_listing/AjouterVariable.html.twig', 
+            'form' => $form->createView()
+        ]);
+    }
+
+    private function getNextId(string $filePath): int
+    {
+        $lastId = 0;
+
+        if (file_exists($filePath)) {
+            if (($handle = fopen($filePath, 'r')) !== false) {
+                while (($data = fgetcsv($handle, 1000, ';')) !== false) {
+                    if (!empty($data) && is_numeric($data[0])) {
+                        $lastId = max($lastId, (int)$data[0]);
+                    }
+                }
+                fclose($handle);
+            }
+        }
+
+        return $lastId + 1;
+    }
 }

@@ -8,25 +8,50 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use App\Service\CsvDataExplorer\CsvManager;
-use App\Service\CsvDataExplorer\CsvFilter;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class AddElementType extends AbstractType
 {
-    private $csvManager;
+    private $params;
 
-    public function __construct(CsvManager $csvManager)
+    public function __construct(ParameterBagInterface $params)
     {
-        $this->csvManager = $csvManager;
+        $this->params = $params;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $typeChoices = $this->csvManager->getMetaChoices();
-        $etatGarantiChoices = $this->csvManager->getEtatGarantiChoices();
-        $etatSanteChoices = $this->csvManager->getEtatSanteChoices();
+        // Paths to the CSV files
+        $metaListPath = $this->params->get('kernel.project_dir') . '/public/GLPISYS/MaterielType.csv';
+        $etatGarantiPath = $this->params->get('kernel.project_dir') . '/public/GLPISYS/MetaDataGaranti.csv';
+        $etatSantePath = $this->params->get('kernel.project_dir') . '/public/GLPISYS/MetaDataSante.csv';
 
+        // Load material types from CSV
+        $materialTypes = $this->loadCsvChoices($metaListPath, 3, 0);
+
+        // Load warranty states from CSV
+        $warrantyStates = $this->loadCsvChoices($etatGarantiPath, 1, 0);
+
+        // Load health states from CSV
+        $healthStates = $this->loadCsvChoices($etatSantePath, 1, 0);
+
+        // Build the form with the loaded choices
         $builder
+            ->add('material_type', ChoiceType::class, [
+                'choices' => $materialTypes,
+                'label' => 'Material Type',
+                'placeholder' => 'Select Material Type',
+            ])
+            ->add('warranty_state', ChoiceType::class, [
+                'choices' => $warrantyStates,
+                'label' => 'Warranty State',
+                'placeholder' => 'Select Warranty State',
+            ])
+            ->add('health_state', ChoiceType::class, [
+                'choices' => $healthStates,
+                'label' => 'Health State',
+                'placeholder' => 'Select Health State',
+            ])
             ->add('Arriver', DateType::class, [
                 'label' => 'Date d\'arriver',
                 'required' => true,
@@ -44,9 +69,29 @@ class AddElementType extends AbstractType
             ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
+    private function loadCsvChoices(string $filePath, int $labelIndex, int $valueIndex): array
+    {
+        $choices = [];
+
+        if (file_exists($filePath)) {
+            if (($handle = fopen($filePath, 'r')) !== false) {
+                fgetcsv($handle, 1000, ';'); // Skip header
+                while (($data = fgetcsv($handle, 1000, ';')) !== false) {
+                    if (isset($data[$labelIndex]) && isset($data[$valueIndex])) {
+                        $choices[$data[$labelIndex]] = $data[$valueIndex];
+                    }
+                }
+                fclose($handle);
+            }
+        }
+
+        return $choices;
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
+            // No need for these since we load data directly in the form class
         ]);
     }
 }

@@ -13,20 +13,7 @@ class GelepiBaseController extends AbstractController
      #[Route('/', name: 'app_accueil')]
     public function accueil(): Response
     {
-        return $this->render('accueil/nav.html.twig', [
-            'controller_name' => 'GelepiBaseController',
-        ]);
-    }
-
-
-
-
-
-    
-   #[Route('/base', name: 'app_base')]
-    public function details(): Response
-    {
-        return $this->render('base.html.twig', [
+        return $this->render('tripleblockbase.html.twig', [
             'controller_name' => 'GelepiBaseController',
         ]);
     }

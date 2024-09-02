@@ -1,0 +1,35 @@
+{# templates/tripleblockbase.html.twig #}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>
+			{% block title %}My Application
+			{% endblock %}
+		</title>
+		<link rel="stylesheet" href="{{ asset('css/styles.css') }}"> {% block stylesheets %}{% endblock %}
+		</head>
+		<body>
+			{% block navbar %}
+				{% include 'nav.html.twig' %}
+			{% endblock %}
+
+			<div class="container">
+				{% block body %}
+					{% if body_template is defined %}
+						{% include body_template %}
+					{% else %}
+						{# Default content or a message indicating that no content is available #}
+						<p></p>
+					{% endif %}
+				{% endblock %}
+			</div>
+
+			{% if block('footer') is defined %}
+				<footer></footer>
+			{% endif %}
+
+		</body>
+	</html>
